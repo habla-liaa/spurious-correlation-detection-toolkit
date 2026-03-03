@@ -1,0 +1,49 @@
+experiment_output_dir: Paper-IS26-experiments/
+
+dataset:
+    name: adresso
+    original_audio_path: ADReSSo21/original_audios/diagnosis/train/audio
+    challenge_audio_path: ADReSSo21/ADReSSo21-diagnosis/diagnosis/train/audio
+    apply_denoise: true 
+
+############ ALIGNERS CONFIGURATION ############
+aligners:
+  - name: full
+
+########## SPLITS CONFIGURATION ############
+splits:
+  folds_amount: 8
+  repetitions: 10
+  group_column: subject
+
+############ FEATURES CONFIGURATION ############
+features:
+  - name: wav2vec
+    params:
+      model: facebook/wav2vec2-base
+      minFrames: 512
+      concatenate_segments: true
+      segmenter:
+        size: 30
+        overlap: 20
+ 
+############ MODEL CONFIGURATION ############
+model:
+  name: Wav2Vec2Classifier
+  n_jobs: 2
+  group_column: subject
+  shuffle: true
+  wrap_last: true
+  batch_size: 32
+  epochs: 80
+  dropout: 0.3
+  num_layers: 13
+  projection_dim: 128
+  early_stopping: 
+    patience: 5
+    metric: loss
+  
+  bootstrapping:
+    n_bootstraps: 1000
+    stratify: true
+ 

@@ -1,0 +1,24 @@
+# Core
+numpy>=1.24,<2.0
+pandas>=1.5,<2.2
+scikit-learn>=1.2,<1.5
+PyYAML>=6.0,<7.0
+joblib>=1.2,<2.0
+tqdm>=4.65,<5.0
+
+# Deep learning / audio
+torch>=2.1,<2.6
+torchaudio>=2.1,<2.6
+transformers>=4.35,<5.0
+openai-whisper>=20231117
+speechbrain>=0.5.16,<1.0
+pyannote.audio>=3.0,<4.0
+pydub>=0.25,<1.0
+deepfilternet>=0.5,<1.0
+
+# Denoising pipeline helper (requires system ffmpeg installed)
+ffmpeg-normalize>=1.28,<2.0
+
+# Notebook / visualization
+seaborn>=0.13,<0.14
+ipykernel>=6.29,<7.0

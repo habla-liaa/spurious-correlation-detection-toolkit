@@ -1,0 +1,51 @@
+experiment_output_dir: Paper-IS26-experiments/
+exclude_alignment_contains: non_speech
+
+dataset:
+    name: spanishad
+    metadata: dataframes/metadata.csv
+    manual_aligns: dataframes/aligns/manual_patient.pkl
+    base_audio_path: 11025_16000/
+    apply_denoise: true
+
+############ ALIGNERS CONFIGURATION ############
+aligners:
+  - name: manual
+    params:
+      filename: manual_ipu-only_patient
+
+############ SPLITS CONFIGURATION ############
+splits:
+  folds_amount: 8
+  repetitions: 10
+  group_column: subject
+
+
+############# FEATURES CONFIGURATION ############
+features:
+  - name: wav2vec
+    params:
+      model: jonatasgrosman/wav2vec2-large-xlsr-53-spanish
+      minFrames: 512
+      concatenate_segments: false
+        
+############ MODEL CONFIGURATION ############
+model:
+  name: Wav2Vec2Classifier
+  n_jobs: 2
+  group_column: subject
+  shuffle: true
+  wrap_last: true
+  batch_size: 32
+  epochs: 80
+  dropout: 0.3
+  num_layers: 25
+  projection_dim: 64
+  early_stopping: 
+    patience: 10
+    metric: loss
+  
+  bootstrapping:
+    n_bootstraps: 1000
+    stratify: true
+ 

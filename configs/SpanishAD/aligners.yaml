@@ -1,0 +1,105 @@
+experiment_output_dir: Paper-IS26-aligns/   
+
+dataset:
+    name: spanishad
+    metadata: dataframes/metadata.csv
+    manual_aligns: dataframes/aligns/manual_patient.pkl
+    base_audio_path: 11025_16000/
+    apply_denoise: true
+
+aligners:
+  - name: manual
+    params:
+      filename: manual_ipu
+ 
+  - name: manual
+    params:
+        filename: manual_ipu-only_patient
+  
+  - name: full
+
+  - name: speechbrain
+    params:
+      postprocess:
+        name: silero
+        params:
+            threshold: 0.2
+            sample_rate: 16000
+
+  - name: whisper
+    params:
+      model: large
+      compute_type: float32
+      language: es
+      beam_size: 5
+      no_speech_prob_threshold: 0.8
+      compress_ratio_threshold: 2.4
+      sample_rate: 16000
+      
+  - name: whisper
+    params:
+      model: turbo
+      compute_type: float32
+      language: es
+      beam_size: 5
+      no_speech_prob_threshold: 0.8
+      compress_ratio_threshold: 2.4
+      sample_rate: 16000
+      
+  - name: whisper
+    params:
+      model: medium
+      compute_type: float32
+      language: es
+      beam_size: 5
+      no_speech_prob_threshold: 0.8
+      compress_ratio_threshold: 2.4
+      sample_rate: 16000
+      
+  - name: whisper
+    params:
+      model: turbo
+      compute_type: float32
+      language: es
+      beam_size: 5
+      no_speech_prob_threshold: 0.8
+      compress_ratio_threshold: 2.4
+      sample_rate: 16000
+      postprocess:
+        name: silero
+        params:
+            threshold: 0.2
+            sample_rate: 16000
+
+  - name: speechbrain
+    params:
+      sample_rate: 16000
+          
+  - name: silero
+    params:
+      threshold: 0.5
+      sample_rate: 16000
+  
+  - name: silero
+    params:
+      threshold: 0.2
+      sample_rate: 16000
+
+  - name: silero
+    params:
+      threshold: 0.2
+      sample_rate: 16000
+      postprocess:
+        name: torchvad
+        params:
+          torchVAD_params:
+            trigger_level: 5.5
+            trigger_time: 0.1
+            search_time: 0.5
+            allowed_gap: 0.1
+            measure_freq: 10.0
+
+  - name: pyannote
+    params:
+      huggingface_token: ''
+  
