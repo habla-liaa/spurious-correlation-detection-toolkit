@@ -28,7 +28,7 @@ aligners:
         keep_from: 'start'
         value: 30
     
-  - name: whole_audio
+  - name: full
 
 ############ SPLITS CONFIGURATION ############
 splits:
