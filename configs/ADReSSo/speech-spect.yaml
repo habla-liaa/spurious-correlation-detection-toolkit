@@ -1,11 +1,11 @@
-experiment_output_dir: Paper-IS26-experiments/
+experiment_output_dir: IS26-experiments/
 exclude_alignment_contains: non_speech
 
 dataset:
     name: adresso
     original_audio_path: ADReSSo21/original_audios/diagnosis/train/audio
     challenge_audio_path: ADReSSo21/ADReSSo21-diagnosis/diagnosis/train/audio
-    apply_denoise: true
+    apply_enhance: true
 
 ############ ALIGNERS CONFIGURATION ############
 aligners:  

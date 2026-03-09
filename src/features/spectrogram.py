@@ -13,17 +13,17 @@ def get_spectrogram_torch(audio_signal, extractor):
     return noise_feature.squeeze(0).transpose(0, 1).contiguous().numpy().astype('float32')
 
 
-def get_name(params):
+def get_name(**kwargs):
     name = "spectrogram"
-    if params.get('concatenate_audio_segments'):
+    if kwargs.get('concatenate_audio_segments'):
         name += "-concatAudioSegs"
-    elif params.get('concatenate_segments'):
+    elif kwargs.get('concatenate_segments'):
         name += "-concatSegs"
     
-    if params.get('segmenter'):
-        name += f"-segSize_{params['segmenter']['size']}-segOverlap_{params['segmenter'].get('overlap', 0)}"
+    if kwargs.get('segmenter'):
+        name += f"-segSize_{kwargs['segmenter']['size']}-segOverlap_{kwargs['segmenter'].get('overlap', 0)}"
     
-    for c, v in params.items():
+    for c, v in kwargs.items():
         if c not in ['concatenate_segments', 'segmenter']:
             name += f"-{c}_{v}"
     return name

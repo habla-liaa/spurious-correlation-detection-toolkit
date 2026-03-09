@@ -6,11 +6,11 @@ import pandas as pd
 import whisper
 from src.utils import resolve_audio_path
 
-def get_name(params, postprocess=False):
-    name = f"whisper-{params['model']}"
-    if not postprocess:
-        if params.get('audio_path'):
-            return f"{name}-dataset_{Path(params.get('audio_path')).name}"
+def get_name(**kwargs):
+    name = f"whisper-{kwargs['model']}"
+    if not kwargs.get('postprocess'):
+        if kwargs.get('audio_path'):
+            return f"{name}-dataset_{Path(kwargs.get('audio_path')).name}"
     return name
 
 

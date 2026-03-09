@@ -6,6 +6,7 @@ import yaml
 
 from src.splits import load_or_create_splits
 from src.speech_alignments.vad_engine import load_or_create_alignments
+from src.dataset_readers.preprocessing import adjust_audio_sample_rates
 from src.features.features_engine import load_or_create_audio_representation
 from src.model_development.system_engine import system_development
 from src.utils import log
@@ -42,12 +43,12 @@ def run_pipeline(config):
 
     aligners_cfg = config.get("aligners", [])
     features_cfg = config.get("features", [])
-
     for subset_name in subset_names:
         log("#" * 90, indent=1)
         log(f"SUBSET: {subset_name}", indent=1)
         subset_output_dir = dataset_output_dir / f'subset-{subset_name}'
-
+        subset_output_dir.mkdir(parents=True, exist_ok=True)        
+        subset_output_dir = adjust_audio_sample_rates(subset_output_dir, dataset_cfg.get('adjusted_audio_path'))
         for aligner_cfg in aligners_cfg:
             log('PREPROCESSING ALIGNMENTS', indent=2)
             aligner_params = aligner_cfg.get('params', {}).copy()

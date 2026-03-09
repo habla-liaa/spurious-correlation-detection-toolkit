@@ -1,8 +1,8 @@
 import numpy as np
 
 
-def get_name(params):
-    return f"normalization-{params['type']}"
+def get_name(**kwargs):
+    return f"normalization-{kwargs['type']}"
 
 
 def normalizer(features, params):   

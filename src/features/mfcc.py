@@ -21,17 +21,17 @@ def instanciate_mfcc(params):
     return mfcc_tf
 
 
-def get_name(params):
+def get_name(**kwargs):
     name = "mfcc"
-    if params.get('concatenate_audio_segments'):
+    if kwargs.get('concatenate_audio_segments'):
         name += "-concatAudioSegs"
-    elif params.get('concatenate_segments'):
+    elif kwargs.get('concatenate_segments'):
         name += "-concatSegs"
     
-    if params.get('segmenter'):
-        name += f"-segSize_{params['segmenter']['size']}-segOverlap_{params['segmenter'].get('overlap', 0)}"
-    name += f"-n_mfcc_{params.get('n_mfcc', 20)}-sr_{params.get('sample_rate', 16000)}"
-    for c, v in params.get('melkwargs', {}).items():
+    if kwargs.get('segmenter'):
+        name += f"-segSize_{kwargs['segmenter']['size']}-segOverlap_{kwargs['segmenter'].get('overlap', 0)}"
+    name += f"-n_mfcc_{kwargs.get('n_mfcc', 20)}-sr_{kwargs.get('sample_rate', 16000)}"
+    for c, v in kwargs.get('melkwargs', {}).items():
         name += f"-{c}_{v}"
     return name
 
@@ -46,18 +46,7 @@ def get_embeddings(alignment_df, params):
         
         sample_rate = params.get('sample_rate', 16000)
         audio_signal = load_audio(audio_file, sample_rate=sample_rate, torch_format=True)
-        
-        if params.get('concatenate_audio_segments'):
-            concatenated_signal = []
-            for segment in segments.itertuples(index=False):
-                start_sample = int(round(segment.start * sample_rate))
-                end_sample = int(round(segment.end * sample_rate))
-                concatenated_signal.append(audio_signal[:, start_sample:end_sample])
-            audio_signal = torch.cat(concatenated_signal, dim=1)
-            mfcc_res = get_mfcc_torch(audio_signal, extractor)
-            features.append({'file': audio_file, 'sample_id': sample_id, 'features': mfcc_res})
-
-        elif params.get('concatenate_segments'):
+        if params.get('concatenate_segments'):
             segments_res = []
             for segment in segments.itertuples(index=False):            
                 start_sample = int(round(segment.start * sample_rate))
@@ -80,7 +69,7 @@ def get_embeddings(alignment_df, params):
                     'file': audio_file, 'sample_id': sample_id,
                     'features': mfcc_res 
                 })
-
+        
     features_df = pd.DataFrame(features)
     if params.get('segmenter'):
         stride, frames = calculate_segmenter_params(params['segmenter'], 

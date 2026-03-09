@@ -8,11 +8,11 @@ from speechbrain.inference.VAD import VAD
 from src.utils import resolve_audio_path, load_audio
 
 
-def get_name(params, postprocess=False):
+def get_name(**kwargs):
 	name = "speechbrain"
-	if not postprocess:
-		if params.get('audio_path'):
-			name += f"-dataset_{Path(params.get('audio_path')).name}"
+	if not kwargs.get('postprocess'):
+		if kwargs.get('audio_path'):
+			name += f"-dataset_{Path(kwargs.get('audio_path')).name}"
 	return name
 
 

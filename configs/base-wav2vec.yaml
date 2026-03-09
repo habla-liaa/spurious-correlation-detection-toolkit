@@ -1,0 +1,59 @@
+experiment_output_dir: experiment-output/
+only_alignment_contains: ""
+exclude_alignment_contains: ""
+cache: false
+
+########## OPTIONAL DATASET CONFIGURATION ##########
+dataset:
+    name: <dataset_name>
+    # ADReSSo reader:
+      # original_audio_path: path/to/original/audios
+      # challenge_audio_path: path/to/challenge/audios
+    # SpanishAD reader:
+      # base_audio_path: path/to/audios
+      # metadata: path/to/metadata.csv
+      # manual_aligns: path/to/manual_alignments.pkl
+    samples_to_filter: ""
+    apply_enhance: true
+
+############ ALIGNERS CONFIGURATION ############
+aligners:
+  - name: <aligner_name>
+    params:
+      sample_rate: 16000
+      # audio_path: path/to/audio/files/
+      # samples_to_ignore: path/to/samples_to_ignore.csv
+  
+
+############ SPLITS CONFIGURATION ############
+splits:
+  folds_amount: 8
+  repetitions: 10
+  group_column: subject
+
+############# FEATURES CONFIGURATION ############
+features:
+  - name: wav2vec
+    params:
+      model: facebook/wav2vec2-base
+      minFrames: 512
+      concatenate_segments: false
+
+############# MODEL CONFIGURATION ############
+model:
+  name: Wav2Vec2Classifier
+  n_jobs: 2
+  group_column: subject
+  shuffle: true
+  wrap_last: true
+  batch_size: 32
+  epochs: 80
+  dropout: 0.3
+  num_layers: 13
+  projection_dim: 128
+  early_stopping:
+    patience: 5
+    metric: loss
+  bootstrapping:
+    n_bootstraps: 1000
+    stratify: true

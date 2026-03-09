@@ -8,11 +8,11 @@ import tqdm
 from src.utils import log, resolve_audio_path, load_audio
 
 
-def get_name(params, postprocess=False):
-	name = "pyannote"
-	if not postprocess:
-		if params.get('audio_path'):
-			name += f"-dataset_{Path(params.get('audio_path')).name}"
+def get_name(**kwargs):
+	name = f"pyannote"
+	if not kwargs.get('postprocess'):
+		if kwargs.get('audio_path'):
+			name += f"-dataset_{Path(kwargs.get('audio_path')).name}"
 	return name
 
 
@@ -60,7 +60,7 @@ def get_alignments(metadata, params):
 		else:
 			try:
 				output = pipeline({"audio": vad_audio_path, "sample_rate": sample_rate})
-			except Exception:
+			except Exception as e:
 				full_waveform = load_audio(vad_audio_path, sample_rate=sample_rate, torch_format=True, torch_params={'normalize':True})
 				output = pipeline({"waveform": full_waveform, "sample_rate": sample_rate})
 			segments = []

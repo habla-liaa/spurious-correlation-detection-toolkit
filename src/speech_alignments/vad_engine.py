@@ -52,7 +52,7 @@ def load_or_create_alignments(experiment_path, aligner_name, params, indent=0, c
         log(f"Removed {len(samples_to_ignore)} samples from non-speech aligns based on {filter_name}", indent=indent + 2)
     
     ######## SPEECH SEGMENTS ########
-    base_name = getattr(aligner_module, "get_name")(params)
+    base_name = getattr(aligner_module, "get_name")(**params)
     speech_aligns_path = experiment_path / f"aligner-{base_name}"
     speech_alignments = load_pickle(speech_aligns_path / "aligns.pkl", cache=cache)
     log(f"SPEECH ALIGNMENTS {'[COMPUTED]' if speech_alignments is not None else ''}: {base_name.lower()}", indent=indent)
@@ -81,8 +81,8 @@ def load_or_create_alignments(experiment_path, aligner_name, params, indent=0, c
                 aligner_module = importlib.import_module(aligner_module_path)
             except ModuleNotFoundError as exc:
                 raise ModuleNotFoundError(f"Module {aligner_module_path} error: {exc}") from exc
-            
-            postprocess_name = getattr(aligner_module, "get_name")(postprocess_cfg["params"], postprocess=True)
+            postprocess_cfg["params"]['postprocess'] = True
+            postprocess_name = getattr(aligner_module, "get_name")(**postprocess_cfg["params"])
             postprocess_without_speech_aligns_path = experiment_path / f"{speech_aligns_path.name}-postprocess-{postprocess_name}-non_speech"
             postprocess_without_speech_aligns = load_pickle(postprocess_without_speech_aligns_path / "aligns.pkl", cache=cache)
             log(f"ALIGNMENTS WITH POSTPROCESS {'[COMPUTED]' if postprocess_without_speech_aligns is not None else ''}: {postprocess_name.lower()}", indent=indent)

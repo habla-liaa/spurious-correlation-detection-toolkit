@@ -1,9 +1,9 @@
 import pandas as pd
 import numpy as np
 
-def get_name(params):
+def get_name(**kwargs):
     name = 'presegmenter'
-    name += f"-size_{params['size']}-overlap_{params.get('overlap', 0)}"
+    name += f"-size_{kwargs['size']}-overlap_{kwargs.get('overlap', 0)}"
     return name
 
 

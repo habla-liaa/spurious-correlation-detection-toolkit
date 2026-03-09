@@ -30,14 +30,14 @@ def instanciate_mel_spectrogram(params):
     return mel_spectrogram_no_pad
 
 
-def get_name(params):
+def get_name(**kwargs):
     name = "melspectrogram"
-    if params.get('concatenate_segments'):
+    if kwargs.get('concatenate_segments'):
         name += "-concatSegs"
-    if params.get('segmenter'):
-        name += f"-segSize_{params['segmenter']['size']}-segOverlap_{params['segmenter'].get('overlap', 0)}"
+    if kwargs.get('segmenter'):
+        name += f"-segSize_{kwargs['segmenter']['size']}-segOverlap_{kwargs['segmenter'].get('overlap', 0)}"
     
-    for c, v in params.items():
+    for c, v in kwargs.items():
         if c not in ['concatenate_segments', 'segmenter']:
             name += f"-{c}_{v}"
     return name

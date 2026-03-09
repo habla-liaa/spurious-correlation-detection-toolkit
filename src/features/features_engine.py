@@ -18,7 +18,7 @@ def load_or_create_audio_representation(experiment_path, feature_name, params, i
     except ModuleNotFoundError as exc:
         raise ModuleNotFoundError(f"Module {feature_module_path} error: {exc}") from exc
 
-    feature_run_name = getattr(feature_module, 'get_name')(params)
+    feature_run_name = getattr(feature_module, 'get_name')(**params)
     feature_dir = experiment_path / f'feature-{feature_run_name}'
     features = load_pickle(feature_dir / 'features.pkl', cache=cache) 
     log(f"AUDIO REPRESENTATION {'[COMPUTED]' if features is not None else ''}: {feature_run_name.lower()}", indent=indent)

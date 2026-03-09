@@ -1,6 +1,6 @@
-def get_name(params):
+def get_name(**kwargs):
     name = 'clip'
-    for c, v in params.items():
+    for c, v in kwargs.items():
         name += f'-{c[0]}_{v}'
     return name
 

@@ -6,19 +6,25 @@ class Wav2Vec2Classifier(nn.Module):
         super().__init__()
         
         self.layer_pooling = nn.Linear(kwargs['num_layers'], 1)
+        if not kwargs.get('without_hidden', False):
+            self.projection = nn.Sequential(
+                nn.Linear(kwargs['in_channels'], kwargs['projection_dim']),
+                nn.ReLU(), 
+                nn.Dropout(kwargs.get('dropout', 0.1)),
+            )
+            projection_dim = kwargs['projection_dim']
+        else:
+            self.projection = None
+            projection_dim = kwargs['in_channels']
         
-        self.projection = nn.Sequential(
-            nn.Linear(kwargs['in_channels'], kwargs['projection_dim']),
-            nn.ReLU(), 
-            nn.Dropout(kwargs.get('dropout', 0.1)),
-        )
-        
-        self.classifier = nn.Linear(kwargs['projection_dim'], kwargs['num_classes'])
+        self.classifier = nn.Linear(projection_dim, kwargs['num_classes'])
 
     def forward(self, hidden_states):
         pooled_states = self.layer_pooling(hidden_states).squeeze(-1)  
-        
-        projected = self.projection(pooled_states)
+        if self.projection is not None:
+            projected = self.projection(pooled_states)
+        else:
+            projected = pooled_states
         logits = self.classifier(projected)
         return logits
 

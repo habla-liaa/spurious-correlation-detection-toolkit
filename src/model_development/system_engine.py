@@ -53,16 +53,16 @@ def process_fold(dataset, params, fold_index, train_ids, val_ids, test_ids, expe
     gc.collect()
 
 
-def get_name(params):
-    name = f"model-{params['name']}"
-    for c, v in params.items():
+def get_name(**kwargs):
+    name = f"model-{kwargs['name']}"
+    for c, v in kwargs.items():
         if c not in ['name', 'device', 'n_jobs', 'shuffle', 'drop', 'wrap', 'bootstrapping', 'early_stopping']:
             name += f"-{c}_{v}"
     
-    name += f"-{'shuffle' if params.get('shuffle', True) else 'wo_shuffle'}"
-    name += "-drop" if params.get("drop_last") else ''
-    name += "-wrap" if params.get("wrap_last") else ''
-    name += get_early_stopping_name(params)
+    name += f"-{'shuffle' if kwargs.get('shuffle', True) else 'wo_shuffle'}"
+    name += "-drop" if kwargs.get("drop_last") else ''
+    name += "-wrap" if kwargs.get("wrap_last") else ''
+    name += get_early_stopping_name(**kwargs)
     return name
 
 
@@ -74,7 +74,7 @@ def system_development(metadata_path, features_path, splits_path, model_paramete
     dataset = pd.merge(features_df, metadata, on='sample_id')
     dataset = dataset.set_index('sample_id')
     
-    experiment_name = get_name(model_parameters)
+    experiment_name = get_name(**model_parameters)
     output_path = features_path / experiment_name
     
     metrics = load_pickle(output_path / 'metrics.pkl', cache=cache)
@@ -90,13 +90,15 @@ def system_development(metadata_path, features_path, splits_path, model_paramete
                                       fold_index, train_ids, val_ids, test_ids, repetition_dir, cache=cache)
                 for fold_index, (train_ids, val_ids, test_ids) in enumerate(repetition_splits)
             )
-    compute_metrics(output_path, indent=indent)
+    res = compute_metrics(output_path, indent=indent)
+    save_pickle(res, output_path, 'metrics')
     
     if model_parameters.get('bootstrapping'):
-        boot_name = get_boot_name(model_parameters['bootstrapping'])
+        boot_name = get_boot_name(**model_parameters['bootstrapping'])
         bootstrap = load_pickle(output_path / f'{boot_name}.pkl', cache=cache)
         log(f"BOOTSTRAPPING {'[COMPUTED]' if bootstrap is not None else ''}: {boot_name.lower()}", indent=indent)
         if bootstrap is None:
-            compute_bootstrapping(output_path, model_parameters['bootstrapping'])
+            boot_results = compute_bootstrapping(output_path, model_parameters['bootstrapping'])
+            save_pickle(boot_results, output_path, boot_name)
     
     return output_path

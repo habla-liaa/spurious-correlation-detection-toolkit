@@ -26,9 +26,9 @@ def evaluate_loss(model, data_loader, loss_criterion):
     return total_loss / max(num_batches, 1), auc
 
 
-def get_early_stopping_name(params):
-    if params.get('early_stopping', None):
-        early_params = {} if isinstance(params['early_stopping'], bool) else params['early_stopping']
+def get_early_stopping_name(**kwargs):
+    if kwargs.get('early_stopping', None):
+        early_params = {} if isinstance(kwargs['early_stopping'], bool) else kwargs['early_stopping']
         metric = early_params.get('metric', 'loss')
         patience = early_params.get('patience', None)
         min_epochs = early_params.get('min_epochs', 1)

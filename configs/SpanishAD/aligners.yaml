@@ -2,10 +2,10 @@ experiment_output_dir: Paper-IS26-aligns/
 
 dataset:
     name: spanishad
-    metadata: dataframes/metadata.csv
-    manual_aligns: dataframes/aligns/manual_patient.pkl
-    base_audio_path: 11025_16000/
-    apply_denoise: true
+    metadata:  SpanishAD/dataframes/metadata.csv
+    manual_aligns: SpanishAD/dataframes/aligns/manual_patient.pkl
+    base_audio_path: SpanishAD/audios/
+    apply_enhance: true
 
 aligners:
   - name: manual

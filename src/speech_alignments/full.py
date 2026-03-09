@@ -1,7 +1,7 @@
 from src.utils import get_audio_duration
 
 
-def get_name(params, postprocess=False):
+def get_name(**kwargs):
     return 'full_audio'
 
 

@@ -30,16 +30,16 @@ def load_wav2vec_model(device: torch.device, model_path: str):
     return model, feature_extractor, sample_rate
 
 
-def get_name(params):
+def get_name(**kwargs):
     name = "wav2vec"
-    if params.get('concatenate_audio_segments'):
+    if kwargs.get('concatenate_audio_segments'):
         name += "-concatAudioSegs"
-    elif params.get('concatenate_segments'):
+    elif kwargs.get('concatenate_segments'):
         name += "-concatSegs"
         
-    if params.get('segmenter'):
-        name += f"-segSize_{params['segmenter']['size']}-segOverlap_{params['segmenter'].get('overlap', 0)}"
-    return f"{name}-{params['model'].replace('/', '-')}-minFrames_{params.get('minFrames', 0)}"
+    if kwargs.get('segmenter'):
+        name += f"-segSize_{kwargs['segmenter']['size']}-segOverlap_{kwargs['segmenter'].get('overlap', 0)}"
+    return f"{name}-{kwargs['model'].replace('/', '-')}-minFrames_{kwargs.get('minFrames', 0)}"
 
 
 def get_embeddings(alignment_df, params):

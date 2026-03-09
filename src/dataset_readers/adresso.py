@@ -2,7 +2,7 @@ import glob
 from pathlib import Path
 import pandas as pd
 
-from src.dataset_readers.denoising import generate_denoised_audios, generate_denoised_metadata
+from src.dataset_readers.denoising import generate_enhanced_audios, generate_enhanced_metadata
 from src.utils import log, save_pickle, load_samples_to_filter
 
 
@@ -64,10 +64,10 @@ def read_dataset(output_path, params):
         read_audios_and_metadata(params['challenge_audio_path'], samples_to_ignore, output_path / 'subset-challenge')
         list_to_return.append('challenge')
     
-    #### Denoised audios ################################################################################### 
-    if params.get('apply_denoise'):        
-        generate_denoised_audios(output_path, data.file.unique())
-        list_to_return.extend(generate_denoised_metadata(output_path, ['original'])) 
+    #### Enhanced audios ################################################################################### 
+    if params.get('original_audio_path') and params.get('apply_enhance'):        
+        generate_enhanced_audios(output_path, data.file.unique())
+        list_to_return.extend(generate_enhanced_metadata(output_path, ['original'])) 
     ########################################################################################################
 
     #### Load and save manual aligns for the whole dataset (will be used for all subsets) ##################

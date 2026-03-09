@@ -5,11 +5,13 @@ import tqdm
 import joblib
 import pandas as pd
 
+from src.utils import save_pickle
 
-def get_name(params):
+
+def get_name(**kwargs):
     name = 'bootstrapped_metrics'
-    name += f"-n_{params['n_bootstraps']}"
-    if params.get('stratify'):
+    name += f"-n_{kwargs['n_bootstraps']}"
+    if kwargs.get('stratify'):
         name += '-stratified'
     return name
 
@@ -70,6 +72,5 @@ def compute_bootstrapping(experiment_path, params):
                 'random_acc': random_acc,
             })
         
-    bootstrapped_results_df = pd.DataFrame(bootstrapped_results)
-    bootstrapped_results_df.to_pickle(experiment_path / f'{get_name(params)}.pkl')
+    return pd.DataFrame(bootstrapped_results)
     

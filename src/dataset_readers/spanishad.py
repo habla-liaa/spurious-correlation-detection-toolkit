@@ -3,7 +3,7 @@ from pathlib import Path
 import pandas as pd
 
 from src.utils import log, save_pickle, load_samples_to_filter
-from src.dataset_readers.denoising import generate_denoised_audios, generate_denoised_metadata
+from src.dataset_readers.denoising import generate_enhanced_audios, generate_enhanced_metadata
 
 
 def balance_dataset(dataset_params, metadata):
@@ -26,8 +26,8 @@ def read_dataset(output_path, params):
     log(f"✓ Filtered out {len(samples_to_ignore)} samples from metadata", indent=2)    
     
     metadata = []
-    AD = glob.glob(f'{params["base_audio_path"]}/AD_*_lamina_1.wav')
-    CTR = glob.glob(f'{params["base_audio_path"]}/CTR_*_lamina_1.wav')
+    AD = glob.glob(f'{params["base_audio_path"]}/**/AD_*_lamina_1.wav')
+    CTR = glob.glob(f'{params["base_audio_path"]}/**/CTR_*_lamina_1.wav')
     for file in AD + CTR:
         sample_id = Path(file).stem
         if sample_id in samples_to_ignore:
@@ -36,7 +36,7 @@ def read_dataset(output_path, params):
         condition = 0 if sample_id.split('_')[0] == 'CTR' else 1
         subject = '-'.join(sample_id.split('_')[0:2])
         metadata.append({'file': file, 'sample_id': sample_id, 'subject': subject, 'condition': condition})
-    
+    assert len(metadata) > 0, "No valid audio files found. Please check the base_audio_path and the filter list."
     metadata = pd.DataFrame(metadata)
     metadata = balance_dataset(params, metadata)
     (output_path / 'subset-original').mkdir(parents=True, exist_ok=True)
@@ -44,9 +44,9 @@ def read_dataset(output_path, params):
     
     subsets = ['original']
     #### Denoised audios ################################################################################### 
-    if params.get('apply_denoise'):        
-        generate_denoised_audios(output_path, metadata.file.unique())
-        subsets.extend(generate_denoised_metadata(output_path, subsets))        
+    if params.get('apply_enhance'):        
+        generate_enhanced_audios(output_path, metadata.file.unique())
+        subsets.extend(generate_enhanced_metadata(output_path, subsets))        
     ########################################################################################################
          
     ########### Load and save manual aligns for the whole dataset (will be used for all subsets) ###########

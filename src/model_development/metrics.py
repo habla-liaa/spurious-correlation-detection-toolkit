@@ -84,6 +84,7 @@ def compute_metrics(experiment_path, indent):
         experiment_results.append(exp_res)
 
     experiment_results = pd.DataFrame(experiment_results)
-    experiment_results.to_pickle(experiment_path / 'metrics.pkl')
     log(f"✓ Result: mean AUC: {round(experiment_results['auc'].mean(), 2)}, "
         f"mean ACC: {round(experiment_results['acc'].mean(), 2)} (random={round(experiment_results['random_acc'].mean(), 2)})", indent=indent+2)
+    return experiment_results
+    

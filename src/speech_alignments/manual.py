@@ -17,8 +17,8 @@ def concatenate_aligns(aligns):
     return pd.DataFrame(new_aligns)
 
 
-def get_name(params, postprocess=False):
-    return 'manual-' + '_'.join(Path(params['filename']).stem.split('_')[1:])
+def get_name(**kwargs):
+    return 'manual-' + '_'.join(Path(kwargs['filename']).stem.split('_')[1:])
 
 
 def get_alignments(metadata, params):

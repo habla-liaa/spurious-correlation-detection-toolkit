@@ -5,12 +5,12 @@ import pandas as pd
 from src.utils import log, resolve_audio_path
 
 
-def get_name(params, postprocess=False):
-    name = f"silero-{params.get('version','last')}-t_{params.get('threshold', 0.2)}-sr_{params.get('sample_rate', 16000)}"
+def get_name(**kwargs):
+    name = f"silero-{kwargs.get('version','last')}-t_{kwargs.get('threshold', 0.2)}-sr_{kwargs.get('sample_rate', 16000)}"
     
-    if not postprocess:
-        if params.get('audio_path'):
-            name += f"-dataset_{Path(params.get('audio_path')).name}" 
+    if not kwargs.get('postprocess'):
+        if kwargs.get('audio_path'):
+            name += f"-dataset_{Path(kwargs.get('audio_path')).name}" 
     
     return name
 
