@@ -9,17 +9,6 @@ When these correlations are present in both train and test data, system performa
 
 The toolkit performs a diagnostic test by predicting the target class using only the **non-speech** regions of each recording. Better-than-chance performance indicates that target-relevant information leaks through non-speech artifacts.
 
-# Spurious Correlation Detection Toolkit
-
-This repository introduces a toolkit for uncovering spurious correlations between recording conditions and target class in speech datasets.
-
-## Overview
-
-Spurious correlations are common in speech corpora, especially in health-related datasets, when recording conditions vary with target labels (e.g., room noise, device/channel effects, encoding artifacts, or capture protocol differences).
-When these correlations are present in both train and test data, system performance can be overestimated, especially in high-stakes contexts.
-
-The toolkit performs a diagnostic test by predicting the target class using only the **non-speech** regions of each recording. Better-than-chance performance indicates that target-relevant information leaks through non-speech artifacts.
-
 ## Installation
 
 Clone the repository and install the Python dependencies:
