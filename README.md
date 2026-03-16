@@ -29,13 +29,13 @@ Single experiment:
 python src/pipeline.py -c -cf configs/SpanishAD/speech-mfcc.yaml
 ```
 
-Run all non-template configs:
+Run all configs in the config directory:
 
 ```bash
 bash run.sh
 ```
 
-`-c` enables cache mode to reuse existing artifacts.
+`-c` enables cache mode to reuse existing files from prior runs.
 
 ## What this repo includes
 
@@ -72,27 +72,25 @@ bash run.sh
 
 ## Method
 
+The method consists of the following steps:
+
 1. **Non-speech extraction**: get non-speech regions from VAD or manual annotations.
 2. **Feature extraction**: extract acoustic features from each defined segment. 
 3. **Concatenation + chunking**: build fixed-length chunks so the model does not directly use global duration/timing.
-4. **Training/inference**: train a classifier on chunk-level samples; average chunk scores per waveform.
-5. **Decision**: if non-speech classification is above chance, likely indicates recording-condition leakage.
+4. **Training/inference**: train a classifier on chunk-level samples; during inference, average chunk scores per waveform.
+5. **Decision**: if non-speech classification is above chance, likely indicates the presence of spurious correlations between the recording conditions and the sample class.
 
 ## Important assumptions
 
 The method is designed for datasets where:
 
-- recordings contain some non-speech/silence time,
-- labels are available at waveform level,
+- recordings contain at least a few seconds of non-speech/silence, 
+- the class of interest is annotated at waveform level,
 - task can be framed as binary classification (or one-vs-rest for multiclass).
 
-## Typical use cases
+## Use cases
 
-Useful as a preprocessing sanity check before final modeling to:
-
-- detect protocol/recording artifacts linked to labels,
-- decide if additional data collection controls are needed,
-- compare preprocessing variants (raw/challenge/enhanced, different VADs).
+This toolkit can be used as a preprocessing sanity check before using datasets for speech processing tasks, specially when the recording conditions were not fully controlled. It allows users to detect protocol/recording artifacts correlated to labels. If used during data collection, a positive result from this sanity check would signal that the collection protocol needs improvement.
 
 ## VAD / non-speech quality control
 
@@ -105,15 +103,15 @@ Reliable non-speech boundaries are central to valid diagnosis.
   - speech leakage and missed non-speech metrics,
   - manual listening/annotation tool to audit non-speech segments.
 
-Recommended control:
+We recommend users to
 
-- use manual checks when possible,
+- manually annotate some samples for VAD when possible, to allow for tuning of VAD system parameters (should be very small for valid results when using this tool) 
 - when needed, run a second VAD stage on first-pass non-speech,
 - discard samples with clear speech leakage from subsequent analysis.
 
 ## Pipeline (configurable components)
 
-This section maps the YAML sections to the runtime pipeline.
+This section describes the sections in the YAML configs.
 
 ### Config structure (base)
 
