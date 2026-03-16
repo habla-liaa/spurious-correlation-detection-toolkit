@@ -103,9 +103,9 @@ Reliable non-speech boundaries are central to valid diagnosis.
 
 We recommend users to
 
-- manually annotate some samples for VAD when possible, to allow for tuning of VAD system parameters (should be very small for valid results when using this tool) 
-- when needed, run a second VAD stage on first-pass non-speech,
-- discard samples with clear speech leakage from subsequent analysis.
+- Manually annotate some samples for VAD when possible, to allow for tuning of VAD system parameters. The speech leakage should be very small to allow for valid results when using this tool.
+- When needed, run a second VAD stage on first-pass non-speech.
+- Manually check the resulting VAD and discard samples with speech leakage from subsequent analysis.
 
 ## Pipeline 
 
