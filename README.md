@@ -59,9 +59,7 @@ bash run.sh
   - `mfcc.py`, `spectrogram.py`, `melspectrogram.py`, `wav2vec.py`.
 - `src/model_development/`: split creation, datasets, models, training, metrics, bootstrap.
 - `configs/`: experiment configuration files.
-  - `base-mfcc.yaml`
-  - `base-spectrogram.yaml`
-  - `base-wav2vec.yaml`
+  - template configs
   - dataset folders `configs/ADReSSo/`, `configs/SpanishAD/`
 - `run.sh`: script to run all available configs.
 - `notebooks/`: analysis helpers and result plotting.
@@ -109,16 +107,16 @@ We recommend users to
 - when needed, run a second VAD stage on first-pass non-speech,
 - discard samples with clear speech leakage from subsequent analysis.
 
-## Pipeline (configurable components)
+## Pipeline 
 
 This section describes the sections in the YAML configs.
 
 ### Config structure (base)
 
 The base starting templates are:
-- `configs/base-mfcc.yaml`
-- `configs/base-spectrogram.yaml`
-- `configs/base-wav2vec.yaml`
+- `configs/templates/base-mfcc.yaml`
+- `configs/templates/base-spectrogram.yaml`
+- `configs/templates/base-wav2vec.yaml`
 
 ### Global controls
 
@@ -128,23 +126,17 @@ Set experiment-level options and output location.
 experiment_output_dir: IS26-experiments/
 ```
 
-Choose which alignment-derived segments are used:
+Choose which alignment-derived segments are used, if non-speech or speech-only:
 
 ```yaml
-only_alignment_contains: non_speech
+keep_segments_that_contain: [non_speech|speech]
 ```
 
-or speech-only:
-
-```yaml
-exclude_alignment_contains: non_speech
-```
-
-Use one of these options (or leave both unset to use both speech and non-speech samples).
+Leave it unset to use both speech and non-speech samples.
 
 ### Dataset reader
 
-Select the dataset reader and dataset paths/flags.
+Select the dataset reader and dataset paths.
 
 ```yaml
 dataset:
@@ -154,7 +146,7 @@ dataset:
 ```
 
 Dataset readers are defined in `src/dataset_readers/` and can be extended for new corpora.
-Each reader should return available `subset`s and generate the per-subset `metadata.pkl` files used downstream.
+Each reader should return available `subset`s and generate the per-subset `metadata.pkl` files.
 
 ### Speech enhancement
 
@@ -163,15 +155,15 @@ Configured in the dataset configuration (`apply_enhance`), the enhancement step 
 - loudness normalization,
 - DeepFilterNet,
 
-implemented in `src/dataset_readers/denoising.py`.
+implemented in `src/dataset_readers/enhancer.py`.
 
 ### Resampling
 
-Audio is first downsampled to the minimum required sample rate in preprocessing, then upsampled to `16000` Hz for downstream normalization/feature consistency.
+Audio is first downsampled to the minimum required sample rate in preprocessing, then upsampled to `16000` Hz.
 
 ### VAD / manual alignment / full-audio mode
 
-Use one or more aligners in order:
+Use one or more aligners:
 
 ```yaml
 aligners:
@@ -180,8 +172,12 @@ aligners:
       filename: manual_ipu-only_patient
 ```
 
-`full` is also supported in configs; in that mode, each whole audio file is processed from start to end and then split by the configured `segmenter` parameters.
-For any non-full mode, non-speech regions are computed as the gaps between speech regions and then also split by `segmenter`.
+`full` is also supported in configs; in that mode, each whole audio file is processed from start to end.
+
+```yaml
+  - name: full
+```
+For any non-full mode, non-speech regions are computed as the gaps between speech regions.
 
 ### Split strategy
 
@@ -191,8 +187,6 @@ splits:
   repetitions: 10
   group_column: subject
 ```
-
-Set `folds_amount: 1` to use a single train/test split.
 
 ### Feature extraction
 
@@ -245,7 +239,7 @@ model:
 
 ## Metrics
 
-- Main metric: AUC (ROC AUC). But we also calculate accuracy. 
+- Main metric: AUC (ROC AUC), but we also calculate accuracy.
 - Confidence intervals: bootstrap over test predictions.
 - The metric is used as a sanity signal, not as a final absolute benchmark by itself.
 
@@ -258,12 +252,20 @@ The `notebooks/01-VAD-Manual-Review.ipynb` notebook is the diagnostic step for V
 
 Use this notebook to make an explicit VAD decision before running full classification experiments.
 
+Additionally, it is possible to listen to all non-speech segments of each waveform as one continuous audio file. In this case, run:
+
+```bash
+python src/vad_analysis.py -cf configs/database_config.yaml
+```
+
+Follow the instructions provided by the script to listen to all samples or export them for listening in another program.
+
 ## Audio Metadata
 
 Use `notebooks/02-Metadata-Leakage-Audit.ipynb` to audit audio-level metadata and detect technical spurious correlations:
 
 - load all `metadata.pkl` files from an experiment root,
 - extract per-file properties with `ffmpeg.probe` (codec, sample rate, channels, bit depth, etc.),
-- compare metadata distributions across condition/class and experiment subsets,
+- compare metadata distributions across condition and experiment subsets,
 - run a simple RandomForest baseline over metadata features (100 train/test repetitions) with Accuracy and AUC,
 - visualize distribution balance and metadata-driven classification results to identify recording confounds.

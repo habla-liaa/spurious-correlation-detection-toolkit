@@ -2,7 +2,7 @@ import glob
 from pathlib import Path
 import pandas as pd
 
-from src.dataset_readers.denoising import generate_enhanced_audios, generate_enhanced_metadata
+from src.dataset_readers.enhancer import generate_enhanced_audios, generate_enhanced_metadata
 from src.utils import log, save_pickle, load_samples_to_filter
 
 

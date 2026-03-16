@@ -1,6 +1,5 @@
 experiment_output_dir: experiment-output/
-only_alignment_contains: ""
-exclude_alignment_contains: ""
+keep_segments_that_contain: "speech"       #  [non-speech|speech] segments. Keep empty to use all alignments.
 cache: false
 
 ########## OPTIONAL DATASET CONFIGURATION ##########
@@ -27,13 +26,9 @@ aligners:
         type: 'fixed'
         keep_from: 'start'
         value: 30
+    
+  - name: full
 
-  - name: <aligner_name_2>
-    params:
-      sample_rate: 16000
-      # audio_path: path/to/audio/files/
-      # samples_to_ignore: path/to/samples_to_ignore.csv
-      
 ############ SPLITS CONFIGURATION ############
 splits:
   folds_amount: 8
@@ -42,16 +37,22 @@ splits:
 
 ############# FEATURES CONFIGURATION ############
 features:
-  - name: spectrogram
+  - name: mfcc
     params:
-      n_fft: 400
-      hop_length: 160
+      n_mfcc: 40
       sample_rate: 16000
-      power: 2.0
-      concatenate_segments: true
+      melkwargs:
+        n_fft: 400
+        hop_length: 160
+        n_mels: 80
+        center: false
+        power: 2.0
+        mel_scale: slaney
+        norm: slaney
+      concatenate_segments: false
       segmenter:
-        size: 5
-        overlap: 4
+        size: 30
+        overlap: 20
 
 ############# MODEL CONFIGURATION ############
 model:

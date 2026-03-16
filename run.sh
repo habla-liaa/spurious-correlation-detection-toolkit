@@ -3,9 +3,8 @@ set -euo pipefail
 
 mapfile -t configs < <(
     find configs -type f -name '*.yaml' \
-        ! -path 'configs/*/lists/*' \
-        ! -name 'base.yaml' \
-        ! -name 'base-*.yaml' \
+        ! -path 'configs/*/lists/*' \   
+        ! -name 'templates/base-*.yaml' \
         | sort
 )
 

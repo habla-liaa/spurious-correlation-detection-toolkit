@@ -1,5 +1,5 @@
 experiment_output_dir: IS26-experiments/
-only_alignment_contains: non_speech
+keep_segments_that_contain: non_speech
 
 dataset:
     name: adresso

@@ -1,6 +1,5 @@
 experiment_output_dir: experiment-output/
-only_alignment_contains: ""
-exclude_alignment_contains: ""
+keep_segments_that_contain: "non_speech"       #  [non-speech|speech] segments. Keep empty to use all alignments.
 cache: false
 
 ########## OPTIONAL DATASET CONFIGURATION ##########

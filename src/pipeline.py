@@ -61,13 +61,16 @@ def run_pipeline(config):
             
             for alignment_dir in alignment_dirs:
                 log("-" * 90, indent=2)
-                if config.get('only_alignment_contains') and config['only_alignment_contains'] not in str(alignment_dir):
-                    log(f'!! INFO :: Skipping alignment dir because {config["only_alignment_contains"]} not found in {alignment_dir.name}.', indent=3)
-                    continue
-                if config.get('exclude_alignment_contains') and config['exclude_alignment_contains'] in str(alignment_dir):
-                    log(f'!! INFO :: Skipping alignment dir because {config["exclude_alignment_contains"]} found in {alignment_dir.name}.', indent=3)
-                    continue
-                
+                if config.get('keep_segments_that_contain'):
+                    if config['keep_segments_that_contain'] == 'speech' and 'non_speech' in alignment_dir.name:
+                        log(f'!! INFO :: Skipping alignment of non-speech', indent=3)
+                        continue
+                    elif config['keep_segments_that_contain'] == 'non_speech' and 'non_speech' not in alignment_dir.name:
+                        log(f'!! INFO :: Skipping alignment of speech-only', indent=3)
+                        continue
+                    else:
+                        raise ValueError(f'Invalid value for keep_segments_that_contain: {config["keep_segments_that_contain"]}. Must be either "speech" or "non_speech".')
+
                 log(f"ALIGNMENT: {alignment_dir.name}", indent=2)
                 splits_dir = load_or_create_splits(subset_output_dir, alignment_dir, config["splits"], indent=2, cache=cache)
                 

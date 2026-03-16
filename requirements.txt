@@ -16,7 +16,7 @@ pyannote.audio>=3.0,<4.0
 pydub>=0.25,<1.0
 deepfilternet>=0.5,<1.0
 
-# Denoising pipeline helper (requires system ffmpeg installed)
+# Enhancer pipeline helper (requires system ffmpeg installed)
 ffmpeg-normalize>=1.28,<2.0
 
 # Notebook / visualization
