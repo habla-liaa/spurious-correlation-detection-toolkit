@@ -4,7 +4,8 @@ This repository introduces a toolkit for uncovering spurious correlations betwee
 
 ## Overview
 
-Spurious correlations are common in speech corpora, especially in health-related datasets, when recording conditions vary with target labels (e.g., room noise, device/channel effects, encoding artifacts, or capture protocol differences).
+Spurious correlations appear in speech corpora when recording conditions (e.g., room noise, device/channel effects, encoding artifacts, or capture protocol differences) correlate with target labels. This may happen, for example, in health-care collections, if control subjects are collected in a different location or by a different doctor with a different device than patients with the target condition. 
+
 When these correlations are present in both train and test data, system performance can be overestimated, especially in high-stakes contexts.
 
 The toolkit performs a diagnostic test by predicting the target class using only the **non-speech** regions of each recording. Better-than-chance performance indicates that target-relevant information leaks through non-speech artifacts.
