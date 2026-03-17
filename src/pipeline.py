@@ -79,6 +79,7 @@ def run_pipeline(config):
                     log("-" * 90, indent=2)
                     features_dir = load_or_create_audio_representation(alignment_dir, feature_cfg['name'], feature_cfg.get('params', {}),
                                                                        indent=3, cache=cache)
+                    config['model']['group_column'] = config["splits"]['group_column']
                     experiment_dir = system_development(subset_output_dir, features_dir, splits_dir, config['model'], indent=3, cache=cache)
                   
                     with (experiment_dir / 'config.yaml').open('w', encoding='utf-8') as config_file:
@@ -90,8 +91,6 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--cache', dest='cache', action='store_true')
     parser.add_argument('-cf', '--config', dest='config_file', required=True, help='Path to the configuration YAML file')
-    parser.add_argument('--download-cache-dir', dest='download_cache_dir', default=None,
-                        help='Directory used by external model download caches (whisper, torch hub, huggingface).')
     return parser.parse_args()
 
 
@@ -100,7 +99,5 @@ if __name__ == '__main__':
 
     config = yaml.safe_load(Path(args.config_file).read_text())
     config['cache'] = args.cache
-    if args.download_cache_dir:
-        config['download_cache_dir'] = args.download_cache_dir
 
     run_pipeline(config)

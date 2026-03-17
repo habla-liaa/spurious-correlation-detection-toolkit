@@ -15,7 +15,7 @@ def get_spectrogram_torch(audio_signal, extractor):
 
 def instanciate_mel_spectrogram(params):
     mel_spectrogram_no_pad = torchaudio.transforms.MelSpectrogram(
-        sample_rate=params.get("sample_rate", 16000),
+        sample_rate=16000,
         n_fft=params.get("n_fft", 2048),
         hop_length=params.get("hop_length", 512),
         n_mels=params.get("n_mels", 128),
@@ -50,7 +50,7 @@ def get_embeddings(alignment_df, params):
     for (audio_file, sample_id), segments in tqdm.tqdm(alignment_df.groupby(['file', 'sample_id']), 
                                                        total=len(alignment_df.file.unique())):
         
-        sample_rate = params.get('sample_rate', 16000)
+        sample_rate = 16000
         audio_signal = load_audio(audio_file, sample_rate=sample_rate, torch_format=True)
         
         if params.get('concatenate_segments'):

@@ -17,7 +17,6 @@ aligners:
   - name: silero
     params:
       threshold: 0.2
-      sample_rate: 16000
 
   - name: pyannote
     params:
@@ -34,7 +33,6 @@ features:
   - name: mfcc
     params:
       n_mfcc: 40
-      sample_rate: 16000
       melkwargs:
         n_fft: 400
         hop_length: 160
@@ -52,7 +50,6 @@ features:
 model:
   name: AcousticCNNClassifier
   n_jobs: 4
-  group_column: subject
   shuffle: true
   wrap_last: true
   batch_size: 32

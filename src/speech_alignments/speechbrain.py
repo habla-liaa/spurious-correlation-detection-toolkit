@@ -16,10 +16,7 @@ def get_name(**kwargs):
 	return name
 
 
-def get_target_sample_rate(vad_model, params):
-	if params.get('sample_rate'):
-		return int(params['sample_rate'])
-
+def get_target_sample_rate(vad_model):
 	hparams = getattr(vad_model, 'hparams', None)
 	if hparams is not None:
 		if isinstance(hparams, dict) and hparams.get('sample_rate'):
@@ -43,7 +40,7 @@ def get_alignments(metadata, params):
 	
 	device = 'cuda' if torch.cuda.is_available() else 'cpu'
 	vad_model = VAD.from_hparams(source="speechbrain/vad-crdnn-libriparty", savedir="pretrained_models/vad-crdnn-libriparty", run_opts={"device": device})
-	target_sample_rate = get_target_sample_rate(vad_model, params)
+	target_sample_rate = get_target_sample_rate(vad_model)
 
 	try:
 		for (vad_audio_path, sample_id, file), audio_segments in tqdm.tqdm(metadata.groupby(['vad_audio_path', 'sample_id', 'file']), 

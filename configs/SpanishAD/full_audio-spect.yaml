@@ -23,7 +23,6 @@ features:
     params:
       n_fft: 400
       hop_length: 160
-      sample_rate: 16000
       concatenate_segments: false
       segmenter:
         size: 30
@@ -33,7 +32,6 @@ features:
 model:
   name: AcousticCNNClassifier
   n_jobs: 1
-  group_column: subject
   shuffle: true
   wrap_last: true
   batch_size: 32

@@ -43,7 +43,7 @@ def get_alignments(metadata, params):
     else:
         metadata["vad_audio_path"] = metadata["file"]
 
-    sample_rate = int(params.get("sample_rate", 16000))
+    sample_rate = 16000
     device = "cuda" if torch.cuda.is_available() else "cpu"
     whisper_model = whisper.load_model(params['model'], device=device)
 

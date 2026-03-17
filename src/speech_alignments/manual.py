@@ -27,6 +27,8 @@ def get_alignments(metadata, params):
     if aligns is not None:
         if {'sample_id', 'start', 'end'}.issubset(aligns.columns):
             aligns = concatenate_aligns(aligns)
+        else:
+            raise ValueError(f"Aligns file {params['filename']} must contain 'sample_id', 'start', and 'end' columns.")
         aligns = aligns[aligns.sample_id.isin(metadata.sample_id)]
         aligns = aligns.merge(metadata[['sample_id', 'file']], on='sample_id', how='left')
         return aligns

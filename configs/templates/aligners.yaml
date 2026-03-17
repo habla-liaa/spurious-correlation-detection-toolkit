@@ -1,23 +1,19 @@
-experiment_output_dir: Paper-IS26-aligns/   
+experiment_output_dir: IS26-aligns/   
 
 dataset:
-    name: spanishad
-    metadata:  SpanishAD/dataframes/metadata.csv
-    manual_aligns: SpanishAD/dataframes/aligns/manual_patient.pkl
-    base_audio_path: SpanishAD/audios/
+    name: 
+    metadata: 
+    manual_aligns: 
+    base_audio_path: 
     apply_enhance: true
 
 aligners:
-  - name: manual
-    params:
-      filename: manual_ipu
- 
-  - name: manual
-    params:
-        filename: manual_ipu-only_patient
-  
   - name: full
-
+  
+  - name: manual
+    params:
+      filename: manual
+  
   - name: speechbrain
     params:
       postprocess:
@@ -64,6 +60,7 @@ aligners:
         name: silero
         params:
             threshold: 0.2
+            sample_rate: 16000
 
   - name: speechbrain
           

@@ -14,7 +14,7 @@ def get_mfcc_torch(audio_signal, mfcc_tf):
 
 def instanciate_mfcc(params):
     mfcc_tf = torchaudio.transforms.MFCC(
-        sample_rate=params.get("sample_rate", 16000),
+        sample_rate=16000,
         n_mfcc=params.get("n_mfcc", 20),
         melkwargs=params.get("melkwargs", {})
     ).double()
@@ -30,7 +30,7 @@ def get_name(**kwargs):
     
     if kwargs.get('segmenter'):
         name += f"-segSize_{kwargs['segmenter']['size']}-segOverlap_{kwargs['segmenter'].get('overlap', 0)}"
-    name += f"-n_mfcc_{kwargs.get('n_mfcc', 20)}-sr_{kwargs.get('sample_rate', 16000)}"
+    name += f"-n_mfcc_{kwargs.get('n_mfcc', 20)}"
     for c, v in kwargs.get('melkwargs', {}).items():
         name += f"-{c}_{v}"
     return name
@@ -44,7 +44,7 @@ def get_embeddings(alignment_df, params):
     for (audio_file, sample_id), segments in tqdm.tqdm(alignment_df.groupby(['file', 'sample_id']), 
                                                        total=len(alignment_df.file.unique())):
         
-        sample_rate = params.get('sample_rate', 16000)
+        sample_rate = 16000
         audio_signal = load_audio(audio_file, sample_rate=sample_rate, torch_format=True)
         if params.get('concatenate_segments'):
             segments_res = []

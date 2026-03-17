@@ -43,7 +43,7 @@ def get_embeddings(alignment_df, params):
     for (audio_file, sample_id), segments in tqdm.tqdm(alignment_df.groupby(['file', 'sample_id']), 
                                                        total=len(alignment_df.file.unique())):
         
-        sample_rate = params.get('sample_rate', 16000)
+        sample_rate = 16000
         audio_signal = load_audio(audio_file, sample_rate=sample_rate, torch_format=True)
 
         if params.get('concatenate_audio_segments'):

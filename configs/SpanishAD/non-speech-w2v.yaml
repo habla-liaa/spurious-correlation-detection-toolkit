@@ -17,7 +17,6 @@ aligners:
   - name: silero
     params:
       threshold: 0.2
-      sample_rate: 16000
 
   - name: pyannote
     params:
@@ -45,7 +44,6 @@ features:
 model:
   name: Wav2Vec2Classifier
   n_jobs: 2
-  group_column: subject
   shuffle: true
   wrap_last: true
   batch_size: 32

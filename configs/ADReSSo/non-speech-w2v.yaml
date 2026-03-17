@@ -12,18 +12,15 @@ aligners:
   - name: silero
     params:
       threshold: 0.2
-      sample_rate: 16000
     
   - name: silero
     params:
       threshold: 0.2
-      sample_rate: 16000
       audio_path: ADReSSo21/ADReSSo21-diagnosis/diagnosis/train/audio
  
   - name: silero
     params:
       threshold: 0.2
-      sample_rate: 16000
       audio_path: ADReSSo21/ADReSSo21-diagnosis/diagnosis/train/audio
       samples_to_ignore: configs/ADReSSo/lists/silero_with_speech_challenge.csv
 
@@ -58,7 +55,6 @@ features:
 model:
   name: Wav2Vec2Classifier
   n_jobs: 2
-  group_column: subject
   shuffle: true
   wrap_last: true
   batch_size: 32

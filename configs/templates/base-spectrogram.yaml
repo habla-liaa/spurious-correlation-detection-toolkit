@@ -18,7 +18,6 @@ dataset:
 aligners:
   - name: <aligner_name>
     params:
-      sample_rate: 16000
       # audio_path: path/to/audio/files/
       # samples_to_ignore: path/to/samples_to_ignore.csv
       clip:
@@ -28,7 +27,6 @@ aligners:
 
   - name: <aligner_name_2>
     params:
-      sample_rate: 16000
       # audio_path: path/to/audio/files/
       # samples_to_ignore: path/to/samples_to_ignore.csv
       
@@ -44,7 +42,6 @@ features:
     params:
       n_fft: 400
       hop_length: 160
-      sample_rate: 16000
       power: 2.0
       concatenate_segments: true
       segmenter:
@@ -55,7 +52,6 @@ features:
 model:
   name: AcousticCNNClassifier
   n_jobs: 4
-  group_column: subject
   shuffle: true
   wrap_last: true
   batch_size: 32

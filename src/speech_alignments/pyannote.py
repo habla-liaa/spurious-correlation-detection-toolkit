@@ -1,11 +1,9 @@
-from pathlib import Path
-from random import randint
-
 import pandas as pd
 import tqdm
 
-
-from src.utils import log, resolve_audio_path, load_audio
+from pathlib import Path
+from random import randint
+from src.utils import resolve_audio_path, load_audio
 
 
 def get_name(**kwargs):
@@ -20,7 +18,6 @@ def get_alignments(metadata, params):
 
 	metadata = metadata.copy()
 	if params.get('audio_path'):
-		log("Resolving audio paths for pyannote aligner...", indent=4)
 		metadata['vad_audio_path'] = metadata['file'].apply(lambda path: resolve_audio_path(path, params['audio_path']))
 	else:
 		metadata['vad_audio_path'] = metadata['file']

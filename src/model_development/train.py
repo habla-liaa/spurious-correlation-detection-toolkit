@@ -55,6 +55,8 @@ def train(train_loader, val_loader, in_channels, amount_classes, model_params, i
         early_params = {} if isinstance(model_params['early_stopping'], bool) else model_params['early_stopping']
         patience = early_params.get('patience', None)
         metric = early_params.get('metric', 'loss')
+        if metric not in ['loss', 'auc']:
+            raise ValueError(f"Invalid early stopping metric: {metric}. Must be 'loss' or 'auc'.")
         min_epochs = early_params.get('min_epochs', 1)
         prev_loss, prev_auc = evaluate_loss(model, val_loader, loss_criterion)
         loss_tracker.append({'split': 'val', 'epoch': 0, 'loss': prev_loss, 'auc': prev_auc})

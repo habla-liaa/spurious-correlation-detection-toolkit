@@ -19,7 +19,6 @@ dataset:
 aligners:
   - name: <aligner_name>
     params:
-      sample_rate: 16000
       # audio_path: path/to/audio/files/
       # samples_to_ignore: path/to/samples_to_ignore.csv
   
@@ -42,7 +41,6 @@ features:
 model:
   name: Wav2Vec2Classifier
   n_jobs: 2
-  group_column: subject
   shuffle: true
   wrap_last: true
   batch_size: 32
