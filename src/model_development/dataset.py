@@ -11,7 +11,11 @@ class SpuriousCorrelationDataset(Dataset):
         self.ids = dataset.loc[sampler].index.to_numpy()
         self.embeddings = dataset.loc[sampler, 'features'].to_numpy()
         self.labels = dataset.loc[sampler, 'condition'].to_numpy()
-        self.group_column = dataset.loc[sampler, self.group_column_name].to_numpy()
+
+        if dataset.index.name == self.group_column_name:
+            self.group_column = dataset.loc[sampler].index.to_numpy()
+        else: 
+            self.group_column = dataset.loc[sampler, self.group_column_name].to_numpy()
 
         if params.get('shuffle', True) and status == 'train':
             shuffle_indices = np.arange(len(self.ids))
@@ -26,6 +30,9 @@ class SpuriousCorrelationDataset(Dataset):
 
         self.drop_last = params.get("drop_last", False) if status == 'train' else False
         self.wrap_last = params.get("wrap_last", False) if status == 'train' else False
+        if self.wrap_last and self.batch_size > len(self.ids) * 2:
+            raise ValueError("When using wrap_last, the batch size cannot be larger than twice the dataset size.")
+
 
         if self.drop_last and self.wrap_last:
             raise ValueError("Choose either drop_last or wrap_last, not both.")
