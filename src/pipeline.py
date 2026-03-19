@@ -79,7 +79,7 @@ def run_pipeline(config):
                     log("-" * 90, indent=2)
                     features_dir = load_or_create_audio_representation(alignment_dir, feature_cfg['name'], feature_cfg.get('params', {}),
                                                                        indent=3, cache=cache)
-                    config['model']['group_column'] = config["splits"]['group_column']
+                    config['model']['group_column'] = config["splits"]['group_column'] if not config['model'].get('group_column') else config['model']['group_column']
                     experiment_dir = system_development(subset_output_dir, features_dir, splits_dir, config['model'], indent=3, cache=cache)
                   
                     with (experiment_dir / 'config.yaml').open('w', encoding='utf-8') as config_file:
